@@ -10,7 +10,7 @@ mv $logname logs
 echo done!
 echo
 echo --------Benchmark CPU performance with linpack-----------
-logname=linpack_benchmark_result`date + "%F_%T"`.log
+logname=linpack_benchmark_result_`date +"%F_%T"`.log
 cd $bench_root/CPU/linpack
 ./runme_xeon64 &> $logname
 cat $logname
