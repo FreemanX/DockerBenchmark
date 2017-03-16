@@ -23,5 +23,23 @@ cat $filename | grep -A45 -- -------3  | grep Throughput | grep histogram64 | cu
 echo histogram256
 cat $filename | grep -A45 -- -------3  | grep Throughput | grep histogram256 | cut -d'=' -f 2 | cut -d' ' -f2
 echo
-echo ========4 matrix multiplication========
+echo ========4 matrix multiplication Gflops========
 cat $filename | grep -A6 -- -------4 | grep Performance | cut -d'=' -f2 | cut -d' ' -f2
+echo ========5 matrix transpose GB/s========
+echo --------simple copy-------
+cat $filename | grep -A20 -- -------5 | grep "simple copy" | cut -d'=' -f2 | cut -d' ' -f2
+
+echo --------shared memory copy-------
+cat $filename | grep -A20 -- -------5 | grep "shared memory copy" | cut -d'=' -f2 | cut -d' ' -f2
+echo --------naive-------
+cat $filename | grep -A20 -- -------5 | grep "naive" | cut -d'=' -f2 | cut -d' ' -f2
+echo --------coalesced-------
+cat $filename | grep -A20 -- -------5 | grep "coalesced" | cut -d'=' -f2 | cut -d' ' -f2
+echo --------optimized-------
+cat $filename | grep -A20 -- -------5 | grep "optimized" | cut -d'=' -f2 | cut -d' ' -f2
+echo --------coarse-grained-------
+cat $filename | grep -A20 -- -------5 | grep "coarse-grained" | cut -d'=' -f2 | cut -d' ' -f2
+echo --------fine-grained-------
+cat $filename | grep -A20 -- -------5 | grep "fine-grained" | cut -d'=' -f2 | cut -d' ' -f2
+echo --------diagonal-------
+cat $filename | grep -A20 -- -------5 | grep "diagonal" | cut -d'=' -f2 | cut -d' ' -f2
