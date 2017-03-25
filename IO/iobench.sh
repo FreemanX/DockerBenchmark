@@ -1,6 +1,15 @@
 #!/bin/bash
 
-for ((i=0; i<20; i++))
+if [ ! -f ./ioping ]; then
+	echo "==== You need to create an executable ioping here as follows"
+	echo "==== cd ./iopingsrc"
+	echo "==== make clean"
+	echo "==== make"
+	echo "==== mv ./ioping .."
+	exit 0
+fi
+
+for ((i=0; i<1; i++))
 do
 echo "===================Round $i==========================="
 
