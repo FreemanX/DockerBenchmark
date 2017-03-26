@@ -9,7 +9,7 @@ if [ ! -f ./ioping ]; then
 	exit 0
 fi
 
-for ((i=0; i<1; i++))
+for ((i=0; i<20; i++))
 do
 echo "===================Round $i==========================="
 
