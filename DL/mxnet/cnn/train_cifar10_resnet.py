@@ -37,7 +37,7 @@ References:
 
 Kaiming He, Xiangyu Zhang, Shaoqing Ren, Jian Sun. "Deep Residual Learning for Image Recognition"
 '''
-from __future__ import division
+#from __future__ import division
 import sys
 import argparse
 import math

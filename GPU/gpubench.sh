@@ -21,7 +21,7 @@ do
 	echo Test $i on GPU$CUDA_VISIBLE_DEVICES done!
 done
 
-CUDA_VISIBLE_DEVICES=1
+CUDA_VISIBLE_DEVICES=0
 logfile=`hostname`_`date +"%F_%T"`_gpu$CUDA_VISIBLE_DEVICES\_benchmark.log
 for ((i=0; i<$testnum; i++))
 do
