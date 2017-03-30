@@ -1,5 +1,6 @@
 """A simple demo of new RNN cell with PTB language model."""
 import os
+import argparse
 
 import numpy as np
 import mxnet as mx
@@ -20,17 +21,60 @@ def Perplexity(label, pred):
 
 
 if __name__ == '__main__':
-    batch_size = 256
-    buckets = [32]
-    num_hidden = 256
-    num_embed = 256
-    num_lstm_layer = 2
+    #batch_size = 256
+    #buckets = [32]
+    #num_hidden = 256
+    #num_embed = 256
+    #num_lstm_layer = 2
 
-    num_epoch = 2
-    learning_rate = 0.01
+    #num_epoch = 2
+    #learning_rate = 0.01
+    #momentum = 0.0
+
+    #contexts = [mx.context.gpu(i) for i in range(1)]
+    parser = argparse.ArgumentParser(description='train rnn lstm with ptb')
+    parser.add_argument('--data-dir', type=str, help='the input data directory')
+    parser.add_argument('--gpus', type=str,
+                                help='the gpus will be used, e.g "0,1,2,3"')
+    parser.add_argument('--sequence-lens', type=str, default="32",
+                                help='the sequence lengths, e.g "8,16,32,64,128"')
+    parser.add_argument('--batch-size', type=int, default=128,
+                                help='the batch size')
+    parser.add_argument('--num-hidden', type=int, default=256,
+                                help='size of the state for each lstm layer')
+    parser.add_argument('--num-embed', type=int, default=256,
+                                help='dim of embedding')
+    parser.add_argument('--num-lstm-layer', type=int, default=2,
+                                help='the numebr of lstm layers')
+    parser.add_argument('--lr', type=float, default=0.01,
+                                help='learning rate')
+    parser.add_argument('--model-prefix', type=str,
+                                help='the prefix of the model to load')
+    parser.add_argument('--num-examples', type=str,
+                                help='Flag for consistancy, no use in rnn')
+    parser.add_argument('--save-model-prefix', type=str,
+                                help='the prefix of the model to save')
+    parser.add_argument('--num-epochs', type=int, default=20,
+                                help='the number of training epochs')
+    parser.add_argument('--load-epoch', type=int,
+                                help='load the model on an epoch using the model-prefix')
+    parser.add_argument('--kv-store', type=str, default='local',
+                                help='the kvstore type')
+    args = parser.parse_args()
+
+    data_dir = os.environ['HOME'] + "/data/mxnet/ptb/" if args.data_dir is None else args.data_dir
+    batch_size = args.batch_size  
+    #buckets = [64] #[10, 20, 30, 40, 50, 60]
+    buckets = [int(i) for i in args.sequence_lens.split(',')] #[8,16,32,64,128] 
+    num_hidden = args.num_hidden
+    num_embed = args.num_embed
+    num_lstm_layer = args.num_lstm_layer 
+
+    num_epoch = args.num_epochs
+    learning_rate = args.lr
     momentum = 0.0
 
-    contexts = [mx.context.gpu(i) for i in range(1)]
+    contexts = mx.context.cpu() if args.gpus is None else [mx.context.gpu(int(i)) for i in args.gpus.split(',')]
     vocab = default_build_vocab(os.path.join(data_dir, 'ptb.train.txt'))
 
     init_h = [mx.io.DataDesc('LSTM_state', (num_lstm_layer, batch_size, num_hidden), layout='TNC')]
@@ -43,6 +87,11 @@ if __name__ == '__main__':
     data_val = MyBucketSentenceIter(os.path.join(data_dir, 'ptb.valid.txt'),
                                   vocab, buckets, batch_size, init_states,
                                   time_major=True)
+    sample_size = 0
+    for x in data_train.data:
+        sample_size += len(x)
+    print("len of data train===================== " + str(sample_size))
+
 
     def sym_gen(seq_len):
         data = mx.sym.Variable('data')
@@ -111,7 +160,7 @@ if __name__ == '__main__':
 
     mod.fit(data_train, eval_data=data_val, num_epoch=num_epoch,
             eval_metric=mx.metric.np(Perplexity),
-            batch_end_callback=mx.callback.Speedometer(batch_size, 50),
+            batch_end_callback=mx.callback.Speedometer(batch_size, int((sample_size-1)/batch_size)),
             #initializer=mx.init.Xavier(factor_type="in", magnitude=2.34),
             initializer=mx.init.Uniform(scale=0.1),
             optimizer='sgd',
