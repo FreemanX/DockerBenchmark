@@ -98,7 +98,6 @@ do
 	python ${tool}bm.py -log $tool-resnet-$batchSize -batchSize $batchSize  -network resnet  -devId $devId -numEpochs $numEpochs -epochSize 50000 -gpuCount 1 -lr 0.01 -netType cnn
 
 
-
 	if [ ${tool} != "caffe" ] 
 	then
 		batchSize=128
