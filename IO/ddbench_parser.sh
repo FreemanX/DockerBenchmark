@@ -10,6 +10,6 @@ fi
 echo "======Input file: $filename====="
 for ((i=1; i<5; i++))
 do
-	cat gpuhost_ddIO.log | grep "\[$i\]" | uniq
-	cat gpuhost_ddIO.log | grep "\[$i\]" -A3 | grep bytes | cut -d',' -f3 | cut -d' ' -f2
+	cat $filename | grep "\[$i\]" | uniq
+	cat $filename | grep "\[$i\]" -A3 | grep bytes | cut -d',' -f3 | cut -d' ' -f2
 done
