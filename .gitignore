@@ -32,3 +32,4 @@ eval_model
 multigpu-trained
 *-b*.prototxt
 *tmp*
+*sed*
