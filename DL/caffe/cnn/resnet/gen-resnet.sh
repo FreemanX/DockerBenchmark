@@ -5,7 +5,7 @@ gpu_counts=("1" "2" "4" )
 gpu_count="${gpu_count:-1}"
 learning_rate="${learning_rate:-0.05}"
 batch_size="${batch_size:-1024}"
-num_epochs="${num_epochs:-40}"
+num_epochs="${num_epochs:-5}"
 
 max_iter=`awk "BEGIN {print int((${epoch_size}+${batch_size}-1)/${batch_size}*${num_epochs})}"` #50000/32 * 40
 test_interval=`awk "BEGIN {print int((${epoch_size}+${batch_size}-1)/${batch_size})}"` # 50000/32 * 2
